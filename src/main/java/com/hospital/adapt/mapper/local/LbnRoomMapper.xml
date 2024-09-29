@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnRoomMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnRoom" id="lbnRoomMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnRoom" useGeneratedKeys="true" keyColumn="room_id"
+            keyProperty="room_id">
+        insert into sh_room_info
+        (room_name, room_code, ward_id, sort_code)
+        values
+        (#{room_name}, #{room_code}, #{ward_id}, #{sort_code})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnRoom">
+        update sh_room_info
+        <set>
+            room_name=#{room_name},
+            room_code=#{room_code},
+            ward_id=#{ward_id},
+            sort_code=#{sort_code}
+        </set>
+        where room_id=#{room_id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        delete from sh_room_info where room_id=#{id}
+    </delete>
+
+    <select id="queryAll" resultMap="lbnRoomMap">
+        select * from sh_room_info order by sort_code asc
+    </select>
+
+    <select id="queryById" parameterType="Long" resultMap="lbnRoomMap">
+        select * from sh_room_info where room_id = #{id}
+    </select>
+
+    <select id="queryByWardIdAndBfbm" parameterType="Map" resultMap="lbnRoomMap">
+        select * from sh_room_info where ward_id = #{ward_id} and room_code = #{room_code}
+    </select>
+
+    <select id="queryIdByWardIdAndBfbm" parameterType="Map" resultType="String">
+        select room_id from sh_room_info where ward_id = #{ward_id} and room_code = #{room_code}
+    </select>
+
+    <select id="queryForBuff" resultMap="lbnRoomMap">
+        select ward_id, room_id, room_code from sh_room_info
+    </select>
+
+</mapper>

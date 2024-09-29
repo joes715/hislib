@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnSafeLvlMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnSafeLvl" id="lbnSafeLevelMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnSafeLvl" useGeneratedKeys="true" keyProperty="safe_level_id"
+            keyColumn="safe_level_id">
+        insert into sh_safe_level_info
+        (safe_level_name, safe_level_code, safe_level_color, sort_code, note_txt)
+        values
+        (#{safe_level_name}, #{safe_level_code}, #{safe_level_color}, #{sort_code}, #{note_txt})
+    </insert>
+    <select id="queryForBuff" resultMap="lbnSafeLevelMap">
+        select safe_level_name, safe_level_id from sh_safe_level_info
+    </select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.remote.RbnWardMapper">
+    <resultMap type="com.hospital.adapt.model.remote.RbnWard" id="rbnWardMap">
+
+    </resultMap>
+
+    <select id="queryAll" resultMap="rbnWardMap">
+        select * from his.v_hospital_ward_info order by ward_code asc
+    </select>
+
+
+</mapper>

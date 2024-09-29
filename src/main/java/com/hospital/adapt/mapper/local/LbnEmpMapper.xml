@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnEmpMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnEmp" id="lbnEmployeeMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnEmp" useGeneratedKeys="true" keyProperty="emp_id"
+            keyColumn="emp_id">
+        insert into sh_employee_info
+        (emp_name, emp_sex, emp_job, emp_type)
+        values
+        (#{emp_name}, #{emp_sex}, #{emp_job}, #{emp_type})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnEmp">
+        update sh_employee_info
+        <set>
+            emp_name=#{emp_name},
+            emp_sex=#{emp_sex},
+            emp_job=#{emp_job},
+            emp_type=#{emp_type}
+        </set>
+        where emp_id=#{emp_id}
+    </update>
+
+    <select id="queryAll" resultMap="lbnEmployeeMap">
+        select * from sh_employee_info
+    </select>
+
+    <select id="queryById" parameterType="String" resultMap="lbnEmployeeMap">
+        select * from sh_employee_info where emp_id = #{emp_id}
+    </select>
+
+    <select id="queryByNameJn" parameterType="Map" resultMap="lbnEmployeeMap">
+        select * from sh_employee_info where emp_name = #{emp_name} and emp_job = #{emp_job}
+    </select>
+
+    <select id="queryIdByNameJn" parameterType="Map" resultType="String">
+        select emp_id from sh_employee_info where emp_name = #{emp_name} and emp_job = #{emp_job}
+    </select>
+
+    <select id="queryByJn" parameterType="String" resultMap="lbnEmployeeMap">
+        select * from sh_employee_info where emp_job = #{emp_job}
+    </select>
+
+    <select id="queryIdByJn" parameterType="Map" resultType="Long">
+        select emp_id from sh_employee_info where emp_job = #{emp_job}
+    </select>
+
+    <select id="queryForBuff" resultMap="lbnEmployeeMap">
+        select emp_name, emp_job, emp_id from sh_employee_info
+    </select>
+
+</mapper>

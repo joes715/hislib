@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnPatientMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnPatient" id="lbnPatientMap">
+
+    </resultMap>
+
+    <resultMap type="com.hospital.adapt.model.local.LbnNursLvl" id="lbnNursingLevelMap">
+
+    </resultMap>
+
+    <resultMap type="com.hospital.adapt.model.local.StatisticModel" id="statisticModelMap">
+
+    </resultMap>
+
+    <resultMap type="com.hospital.adapt.model.local.LocPatientStatisticMap" id="locPatientStatisticMap">
+        <result column="bed_name" property="bed" jdbcType="VARCHAR"/>
+        <result column="patient_status" property="illnessStatus" jdbcType="INTEGER"/>
+        <result column="nursing_level" property="nursingLevel" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnPatient" useGeneratedKeys="true" keyColumn="pat_id"
+            keyProperty="pat_id">
+        insert into sh_patient_info
+        (pat_name, pat_sex, pat_age, pat_birth, adm_num, pat_qrcode, in_time, ill_info,
+        level_code, out_time, opr_time, mv_in_time, mv_out_time, pay_name, med_gm, pat_foods,
+        pat_exam, pat_with, pat_safe, pat_isolate, doctor_advice, doctor_id, nurse_id, bed_id, ward_id, dept_id, update_fingerpring)
+        values
+        (#{pat_name}, #{pat_sex}, #{pat_age}, #{pat_birth}, #{adm_num}, #{pat_qrcode}, #{in_time}, #{ill_info},
+        #{level_code}, #{out_time}, #{opr_time}, #{mv_in_time}, #{mv_out_time}, #{pay_name}, #{med_gm}, #{pat_foods},
+        #{pat_exam}, #{pat_with}, #{pat_safe}, #{pat_isolate}, #{doctor_advice}, #{doctor_id}, #{nurse_id}, #{bed_id}, #{ward_id}, #{dept_id},
+        #{update_fingerpring})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnPatient">
+        update sh_patient_info
+        <set>
+            pat_name=#{pat_name},
+            pat_sex=#{pat_sex},
+            pat_age=#{pat_age},
+            pat_birth=#{pat_birth},
+            adm_num=#{adm_num},
+            pat_qrcode=#{pat_qrcode},
+            in_time=#{in_time},
+            ill_info=#{ill_info},
+            level_code=#{level_code},
+            out_time=#{out_time},
+            opr_time=#{opr_time},
+            mv_in_time=#{mv_in_time},
+            mv_out_time=#{mv_out_time},
+            pay_name=#{pay_name},
+            med_gm=#{med_gm},
+            pat_foods=#{pat_foods},
+            pat_exam=#{pat_exam},
+            pat_with=#{pat_with},
+            pat_safe=#{pat_safe},
+            pat_isolate=#{pat_isolate},
+            doctor_advice=#{doctor_advice},
+            doctor_id=#{doctor_id},
+            nurse_id=#{nurse_id},
+            bed_id=#{bed_id},
+            ward_id=#{ward_id},
+            dept_id=#{dept_id},
+            update_fingerpring=#{update_fingerpring}
+        </set>
+        where pat_id=#{pat_id}
+    </update>
+
+    <select id="queryAll" resultMap="lbnPatientMap">
+        select * from sh_patient_info
+    </select>
+
+    <select id="queryAllToMap" resultMap="lbnPatientMap">
+        select adm_num, pat_id, update_fingerpring from sh_patient_info
+    </select>
+
+    <select id="queryByadm_num" parameterType="String" resultMap="lbnPatientMap">
+        select * from sh_patient_info where adm_num = #{adm_num}
+    </select>
+
+    <delete id="deleteNotInadm_nums" parameterType="java.util.Map">
+        delete from sh_patient_info where not find_in_set(adm_num, #{stayNos})
+    </delete>
+
+    <delete id="deleteByZyhm" parameterType="String">
+        delete from sh_patient_info where adm_num =#{adm_num}
+    </delete>
+
+    <select id="getTotal" parameterType="String" resultType="Integer">
+        select count(pat_id) from sh_patient_info where ward_id=#{localWardId}
+    </select>
+
+    <select id="getScTotal" parameterType="String" resultType="Integer">
+        select count(pat_id) from sh_patient_info where ward_id=#{localWardId} and (ill_info=3 or ill_info=4)
+    </select>
+
+    <select id="countLevels" parameterType="String" resultMap="lbnNursingLevelMap">
+        select a.level_name, a.level_color, a.level_code, b.nursing_count from sh_nursing_level_info as a
+        LEFT JOIN(select c.level_code, count(c.pat_id) as nursing_count from sh_patient_info as c where
+        c.ward_id=#{localWardId} group by c.level_code) as b on a.level_code = b.level_code
+        order by a.sort_code asc
+    </select>
+
+    <select id="countNoLevels" parameterType="String" resultType="Integer">
+        select count(a.pat_id) from sh_patient_info as a
+        where (a.level_code not in (select b.level_code from sh_nursing_level_info as b) or a.level_code is null) and a.ward_id =
+        #{localWardId}
+    </select>
+
+    <select id="queryStatisticByLocalBedIdList" parameterType="String" resultMap="locPatientStatisticMap">
+        select a.bed_name, b.ill_info, b.level_code from (select c.bed_name, c.bed_id from sh_bed_info as c where
+        find_in_set(c.bed_id, #{localBedIdList}) order by c.sort_code asc) as a
+        LEFT JOIN sh_patient_info as b on b.bed_id=a.bed_id
+    </select>
+
+    <select id="getChaperonage" parameterType="String" resultMap="locPatientStatisticMap">
+        select a.ill_info, a.level_code, b.bed_name, b.sort_code from sh_patient_info as a
+        LEFT JOIN sh_bed_info as b on a.bed_id=b.bed_id
+        where a.ward_id=#{localWardId} and a.pat_with = 1 order by b.sort_code asc
+    </select>
+
+    <select id="queryBedDevicesnByAdn" parameterType="String" resultType="String">
+        select b.dev_code from sh_bed_info as b where b.bed_id=(select a.bed_id from sh_patient_info as a where
+        a.adm_num=#{adm_num})
+    </select>
+
+    <select id="queryRoomDevicesnByAdn" parameterType="String" resultType="String">
+        select b.dev_code from sh_room_info as b where b.room_id=(select c.room_id from sh_bed_info as c where
+        c.bed_id=(select a.bed_id from sh_patient_info as a where a.adm_num=#{adm_num}))
+    </select>
+
+    <select id="queryFingerPrintByZyhm" parameterType="String" resultType="String">
+        select update_fingerpring from sh_patient_info where adm_num=#{adm_num}
+    </select>
+
+    <select id="getSafeIsolate" parameterType="Map" resultMap="statisticModelMap">
+        SELECT a.safe_name as title, (
+        select group_concat(b.bed_name ORDER BY b.sort_code asc SEPARATOR ' ') bed_name from sh_patient_info aa
+        left join sh_bed_info as b on aa.bed_id = b.bed_id
+        where aa.ward_id=#{ward_id} and aa.pat_id in (select d.pat_id from sh_patient_safe_isolate_info d where d.safe_id =
+        a.safe_id) order by b.sort_code asc
+        ) as content FROM sh_safe_isolate_info a
+        <where>
+            <if test="safe_type > 0">
+                a.safe_type=#{safe_type}
+            </if>
+        </where>
+        order by a.sort_code asc
+    </select>
+
+    <select id="getLevelBed" parameterType="Map" resultMap="statisticModelMap">
+        SELECT a.level_name as title, (
+        select group_concat(b.bed_name ORDER BY b.sort_code asc SEPARATOR ' ') bed_name from sh_patient_info aa
+        left join sh_bed_info as b on aa.bed_id = b.bed_id
+        where aa.ward_id=#{ward_id} and aa.level_code = a.level_code
+        ) as content
+        FROM sh_nursing_level_info as a
+        order by a.sort_code asc
+    </select>
+</mapper>

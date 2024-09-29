@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnPatientSaIsMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnPatientSaIs" id="lbnPatientSafeIsolateMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnPatientSaIs" useGeneratedKeys="true"
+            keyProperty="pat_safe_id" keyColumn="pat_safe_id">
+        insert into sh_patient_safe_isolate_info
+        (pat_id, safe_id, safe_level_id, safe_type)
+        values
+        (#{pat_id}, #{safe_id}, #{safe_level_id}, #{safe_type})
+    </insert>
+
+    <delete id="deleteForPatient" parameterType="Map">
+        delete from sh_patient_safe_isolate_info where pat_id = #{pat_id} and safe_type=#{safe_type};
+    </delete>
+
+</mapper>

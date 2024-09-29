@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnPayTypeMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnPayType" id="lbnPaymentTypeMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnPayType" useGeneratedKeys="true" keyColumn="room_id"
+            keyProperty="room_id">
+        insert into sh_payment_type_info
+        (pay_name, room_code, sort_code)
+        values
+        (#{pay_name}, #{room_code}, #{sort_code})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnPayType">
+        update sh_payment_type_info
+        <set>
+            pay_name=#{pay_name},
+            room_code=#{room_code},
+            sort_code = #{sort_code}
+        </set>
+        where room_id=#{room_id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        delete from sh_payment_type_info where room_id=#{id}
+    </delete>
+
+    <select id="queryAll" resultMap="lbnPaymentTypeMap">
+        select * from sh_payment_type_info where payment_type_enable="y" order by area_sort_id asc
+    </select>
+
+    <select id="queryById" parameterType="Long" resultMap="lbnPaymentTypeMap">
+        select * from sh_payment_type_info where room_id = #{id}
+    </select>
+
+    <select id="queryBySn" parameterType="String" resultMap="lbnPaymentTypeMap">
+        select * from sh_payment_type_info where room_code = #{paymentTypeSn}
+    </select>
+
+    <select id="queryNameByName" parameterType="String" resultType="String">
+        select pay_name from sh_payment_type_info where pay_name = #{pay_name}
+    </select>
+
+    <select id="queryIdBySn" parameterType="String" resultType="Long">
+        select room_id from sh_payment_type_info where room_code = #{paymentTypeSn}
+    </select>
+
+    <select id="queryAllPaymentTypeName" resultType="String">
+        select pay_name from sh_payment_type_info
+    </select>
+
+    <select id="queryByName" parameterType="String" resultMap="lbnPaymentTypeMap">
+        select * from sh_payment_type_info where pay_name = #{pay_name}
+    </select>
+
+</mapper>

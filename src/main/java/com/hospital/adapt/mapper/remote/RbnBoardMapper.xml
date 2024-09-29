@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.remote.RbnBoardMapper">
+    <resultMap type="com.hospital.adapt.model.remote.RbnBoard" id="rbnBoardMap">
+
+    </resultMap>
+
+    <select id="queryPatientIn" parameterType="Map" resultMap="rbnBoardMap">
+        select * from V_hospital_IN_PATIENT_INFO
+        where ward_code in <foreach collection="hisWardsn" item="sn" index="index" open="(" close=")" separator=",">#{sn}
+    </foreach> and patient_date=to_date(#{patientDate},'yyyy-MM-dd')
+    </select>
+
+    <select id="queryPatientOut" resultMap="rbnBoardMap">
+        select * from V_hospital_LEAVE_PATIENT_INFO
+        where ward_code in <foreach collection="hisWardsn" item="sn" index="index" open="(" close=")" separator=",">#{sn}
+    </foreach> and patient_date=to_date(#{patientDate},'yyyy-MM-dd')
+    </select>
+
+    <select id="queryPatientOpr" resultMap="rbnBoardMap">
+        select * from V_hospital_OPR_PATIENT_INFO
+        where ward_code in <foreach collection="hisWardsn" item="sn" index="index" open="(" close=")" separator=",">#{sn}
+    </foreach> and patient_date=to_date(#{patientDate},'yyyy-MM-dd')
+    </select>
+
+    <select id="queryPatientMv" resultMap="rbnBoardMap">
+        select * from V_hospital_MV_PATIENT_INFO
+        where ward_code in <foreach collection="hisWardsn" item="sn" index="index" open="(" close=")" separator=",">#{sn}
+    </foreach> and patient_date=to_date(#{patientDate},'yyyy-MM-dd') and patient_type=#{type}
+    </select>
+
+    <select id="queryPatientIllness" resultMap="rbnBoardMap">
+        select * from V_hospital_ILLNESS_PATIENT_INFO
+        where ward_code in <foreach collection="hisWardsn" item="sn" index="index" open="(" close=")" separator=",">#{sn}
+    </foreach> and patient_status=#{status}
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnSaIsMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnSaIs" id="lbnSafeIsolateMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnSaIs" useGeneratedKeys="true"
+            keyProperty="safe_id" keyColumn="safe_id">
+        insert into sh_safe_isolate_info
+        (safe_name, safe_code, safe_type)
+        values
+        (#{safe_name}, #{safe_code}, #{safe_type})
+    </insert>
+
+    <select id="queryForBuff" resultMap="lbnSafeIsolateMap">
+        select safe_name, safe_id from sh_safe_isolate_info
+    </select>
+
+</mapper>

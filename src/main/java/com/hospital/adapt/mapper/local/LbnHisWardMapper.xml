@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnHisWardMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnHisWard" id="lbnHisWardMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnHisWard" useGeneratedKeys="true" keyColumn="ward_id"
+            keyProperty="ward_id">
+        insert into sh_his_ward_info
+        (ward_name, ward_code)
+        values
+        (#{ward_name}, #{ward_code})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnHisWard">
+        update sh_his_ward_info
+        <set>
+            ward_name=#{ward_name},
+            ward_code=#{ward_code}
+        </set>
+        where ward_id=#{ward_id}
+    </update>
+
+    <select id="queryAll" resultMap="lbnHisWardMap">
+        select a.*, b.ward_id as local_ward_id from sh_his_ward_info as a
+        LEFT JOIN sh_ward_info as b on a.bdbqbm=b.ward_code
+    </select>
+
+    <select id="queryById" parameterType="String" resultMap="lbnHisWardMap">
+        select * from sh_his_ward_info where ward_id = #{id}
+    </select>
+
+    <select id="queryBySn" parameterType="String" resultMap="lbnHisWardMap">
+        select * from sh_his_ward_info where ward_code = #{ward_code}
+    </select>
+
+    <select id="queryIdBySn" parameterType="String" resultType="String">
+        select ward_id from sh_his_ward_info where ward_code = #{ward_code}
+    </select>
+
+    <select id="querySnByHisSn" parameterType="String" resultType="String">
+        select bdbqbm from sh_his_ward_info where ward_code = #{his_ward_sn}
+    </select>
+
+    <select id="queryLocalWardIdByHisWardSn" parameterType="String" resultType="String">
+        select a.ward_id from sh_ward_info a where a.ward_code = (select b.bdbqbm from sh_his_ward_info b where b.ward_code =
+        #{his_ward_sn})
+    </select>
+
+    <select id="queryByLocalWardSn" resultMap="lbnHisWardMap">
+        select a.* from sh_his_ward_info a where a.bdbqbm in (select b.ward_code from sh_ward_info b);
+    </select>
+
+    <select id="queryLocalWardsns" resultType="String">
+        select bdbqbm from sh_his_ward_info group by bdbqbm asc
+    </select>
+
+    <select id="queryLocalWardIdByLocalWardsn" parameterType="String" resultType="String">
+        select ward_id from sh_ward_info where ward_code = #{localWardsn}
+    </select>
+
+    <select id="queryHisWardsnByLocalWardsn" parameterType="String" resultType="String">
+        select ward_code from sh_his_ward_info where bdbqbm = #{localWardsn}
+    </select>
+
+    <select id="queryHisWardNames" resultType="String">
+        select ward_name from sh_his_ward_info
+    </select>
+
+    <select id="queryHisWardCodes" resultType="String">
+        select ward_code from sh_his_ward_info
+    </select>
+
+</mapper>

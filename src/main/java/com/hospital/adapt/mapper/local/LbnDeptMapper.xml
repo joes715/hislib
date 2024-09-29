@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnDeptMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnDept" id="lbnDeptMap">
+
+    </resultMap>
+
+    <select id="queryAll" resultMap="lbnDeptMap">
+        select * from sh_dept_info
+    </select>
+
+    <select id="queryForBuff" resultMap="lbnDeptMap">
+        select dept_id, dept_code from sh_dept_info
+    </select>
+
+    <select id="queryDeptNames" resultType="String">
+        select dept_name from sh_dept_info
+    </select>
+
+    <select id="queryDeptCodes" resultType="String">
+        select dept_code from sh_dept_info
+    </select>
+
+    <select id="queryIdBySn" parameterType="String" resultType="String">
+        select dept_id from sh_dept_info where dept_code=#{dept_code}
+    </select>
+
+</mapper>

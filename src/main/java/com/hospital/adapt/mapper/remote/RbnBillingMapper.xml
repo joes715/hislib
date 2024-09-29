@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.remote.RbnBillingMapper">
+    <resultMap type="com.hospital.adapt.model.remote.RbnBilling" id="rbnBillingMap">
+
+    </resultMap>
+
+    <select id="queryBilling" parameterType="com.hospital.adapt.model.common.ClientRequestParamModel"
+            resultMap="rbnBillingMap">
+        select * from his.V_hospital_BILL_INFO where patient_no=#{patNo} and (bill_date between #{startDate} and #{endDate})
+    </select>
+
+</mapper>

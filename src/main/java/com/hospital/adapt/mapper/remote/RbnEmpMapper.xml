@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.remote.RbnEmpMapper">
+    <resultMap type="com.hospital.adapt.model.remote.RbnEmp" id="rbnEmployeeMap">
+
+    </resultMap>
+
+    <select id="queryByParam" parameterType="com.hospital.adapt.model.common.MyPage" resultMap="rbnEmployeeMap">
+        select * from his.v_hospital_employee_info
+        <where>
+            1=1
+            <if test='params.keyword != null and params.keyword != ""'>
+                and emp_name like CONCAT('%',#{params.keyword},'%')
+            </if>
+        </where>
+        order by emp_name asc
+    </select>
+
+    <select id="queryAll" resultMap="rbnEmployeeMap">
+        select * from his.v_hospital_employee_info where emp_type is not null order by emp_name asc
+    </select>
+
+</mapper>

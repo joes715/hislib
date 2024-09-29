@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnBedMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnBed" id="lbnBedMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnBed" useGeneratedKeys="true" keyColumn="bed_id"
+            keyProperty="bed_id">
+        insert into sh_bed_info
+        (bed_name, bed_code, ward_id, room_id, sort_code)
+        values
+        (#{bed_name}, #{bed_code}, #{ward_id}, #{room_id}, #{sort_code})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnBed">
+        update sh_bed_info
+        <set>
+            bed_code=#{bed_code},
+            ward_id=#{ward_id},
+            room_id = #{room_id},
+            sort_code = #{sort_code}
+        </set>
+        where bed_id=#{bed_id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        delete from sh_bed_info where bed_id=#{id}
+    </delete>
+
+    <select id="queryAll" resultMap="lbnBedMap">
+        select * from sh_bed_info
+    </select>
+
+    <select id="queryById" parameterType="Long" resultMap="lbnBedMap">
+        select * from sh_bed_info where bed_id = #{id}
+    </select>
+
+    <select id="queryLocalBedIdsByHisBeds" parameterType="Map" resultType="String">
+        select GROUP_CONCAT(bed_id ORDER BY sort_code asc) from sh_bed_info where ward_id=#{localWardId} and
+        find_in_set(bed_code, #{hisBedList})
+    </select>
+
+    <select id="queryBedIdByParam" parameterType="Map" resultType="String">
+        select bed_id from sh_bed_info where ward_id=#{ward_id} and bed_code=#{bed_code}
+    </select>
+
+    <select id="queryForBuff" resultMap="lbnBedMap">
+        select ward_id, bed_code, bed_id from sh_bed_info
+    </select>
+
+</mapper>

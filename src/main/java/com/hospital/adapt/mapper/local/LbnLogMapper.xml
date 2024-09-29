@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hospital.adapt.mapper.local.LbnLogMapper">
+    <resultMap type="com.hospital.adapt.model.local.LbnLog" id="bnLogMap">
+
+    </resultMap>
+
+    <insert id="add" parameterType="com.hospital.adapt.model.local.LbnLog" useGeneratedKeys="true" keyProperty="log_id"
+            keyColumn="log_id">
+        insert into sh_log_info
+        (log_txt, log_time, log_creator, log_type, log_detail)
+        values
+        (#{log_txt}, #{log_time}, #{log_creator}, #{log_type}, #{log_detail})
+    </insert>
+
+    <update id="update" parameterType="com.hospital.adapt.model.local.LbnLog">
+        update sh_log_info
+        <set>
+            log_txt=#{log_txt},
+            log_time=#{log_time},
+            log_creator=#{log_creator},
+            log_type=#{log_type},
+            log_detail=#{log_detail}
+        </set>
+        where log_id=#{id}
+    </update>
+
+</mapper>
